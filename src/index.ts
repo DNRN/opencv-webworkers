@@ -1,8 +1,60 @@
-console.log('Hello world');
-import MyWorker from './web-workers/hello.worker';
+// import * as opencv from './assets/scripts/opencv';
+// const cv = require('./assets/scripts/opencv');
+// import MyWorker from './web-workers/hello.worker';
+// import { ScriptLoader } from './scriptloader';
+import { OpenCvManager } from './opencv/opencv.manager';
 
-const test = new MyWorker('');
-test.postMessage({});
-test.onmessage = (message) => {
-    console.log('message from worker', message);
+// declare const cv: any;
+
+const start = async() => {
+    const openCvManager = await OpenCvManager();
+    console.log('OpenCV loaded')
+
+    const imgElement = document.getElementById('imageSrc') as HTMLImageElement;
+    const inputElement = document.getElementById('fileInput');
+    const canvas = document.getElementById('canvasOutput') as HTMLCanvasElement;
+    inputElement.addEventListener('change', (e: any) => {
+        imgElement.src = URL.createObjectURL(e.target.files[0]);
+    }, false);
+    imgElement.onload = () => {
+        // ocvMan.loadImage(canvas);
+        openCvManager.loadFromImageElm('logo', imgElement);
+        openCvManager.showImage('logo', 'canvasOutput');
+
+        openCvManager.loadImage(canvas);
+        openCvManager.delete('logo');
+    };
+    
+    console.log('img elm', imgElement);
 }
+
+start().then();
+
+
+
+// const test = new MyWorker();
+// test.postMessage({});
+// test.onmessage = (message) => {
+//     console.log('message from worker', message);
+// }
+// const imgElement = document.getElementById('imageSrc') as HTMLImageElement;
+// console.log('img elm', imgElement);
+
+// let imgElement = document.getElementById('imageSrc') as HTMLImageElement;
+// let inputElement = document.getElementById('fileInput');
+// inputElement.addEventListener('change', (e: any) => {
+//     console.log('sss')
+//     imgElement.src = URL.createObjectURL(e.target.files[0]);
+// }, false);
+// imgElement.onload = function () {
+//     let mat = cv.imread(imgElement);
+//     cv.imshow('canvasOutput', mat);
+//     mat.delete();
+// };
+
+// console.log('opencv', opencv);
+// const opencvScriptElm = document.getElementById('opencv') as HTMLScriptElement;
+
+// opencvScriptElm.onload = () => {
+//     document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+// }

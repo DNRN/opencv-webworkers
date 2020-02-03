@@ -19,6 +19,9 @@ const ProgressBarPluginConfig = new ProgressBarPlugin()
 /* Export configuration */
 module.exports = {
     mode: 'development',
+    // node: {
+    //     fs: 'empty'
+    // },
     // devtool: 'source-map',
     devServer: {
         inline: true,
@@ -35,6 +38,10 @@ module.exports = {
             {
                 test: /\.worker\.js$/,
                 use: { loader: 'worker-loader' }
+            },
+            {
+                test: /\.js$/,
+                use: ['script-loader']
             },
             {
                 test: /\.css$/,
