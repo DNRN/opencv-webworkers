@@ -12,21 +12,33 @@ export const OpenCvManager = async () => {
     const openCvWorker = new OpenCVWorker();
 
     const canvasOut = document.getElementById('canvasOut') as HTMLCanvasElement;
+    
 
-
-    openCvWorker.onmessage = (message) => {
-        console.log('message from worker', message);
-        if (message.data.type === 'init') {
+    const actions = new Map<string, ((...args) => void)> ([
+        ['init', () => {
             document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
-            console.log(message.data.message)
-        }
-        if (message.data.type === 'grayscale') {
+        }],
+        ['msg', (msg: string) => {
+            console.log(msg);
+        }],
+        ['imageData', (imgData) => {
             const ctx = canvasOut.getContext('2d');
-            console.log('grayscale out', message.data);
-            const imageData = new ImageData(message.data.imageData.data, message.data.imageData.height, message.data.imageData.width);
+            // WTF? OpenCV vender om på width and height
+            canvasOut.width = imgData.height;
+            canvasOut.height = imgData.width;
+            console.log('load image data from openCV worker', imgData);
+            const imageData = new ImageData(imgData.data, imgData.height, imgData.width);
             ctx.putImageData(imageData, 0, 0);
-        }
+        }]
+    ]);
+
+    const handleAction = message => {
+        console.log('msg', message);
+        const action = actions.get(message.data.type);
+
+        action ? action(message.data.args) : console.error('Action not found', message);
     }
+    openCvWorker.onmessage = handleAction;
 
     const readDataFromImage = (canvas: HTMLCanvasElement) => {
         const imgData = canvas.getContext('2d');
@@ -44,8 +56,11 @@ export const OpenCvManager = async () => {
         },
         loadImage: (canvas: HTMLCanvasElement) => {
             const imgData = readDataFromImage(canvas);
-            openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
-            openCvWorker.postMessage({ type: 'grayscale' });
+            openCvWorker.postMessage({ type: 'action', name: 'load', args: imgData }, [imgData.data.buffer]);
+            openCvWorker.postMessage({ type: 'action', name: 'blur' });
+            openCvWorker.postMessage({ type: 'action', name: 'get' });
+            // openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
+            // openCvWorker.postMessage({ type: 'grayscale' });
         },
         grayscale: () => {
             openCvWorker.postMessage({ type: 'grayscale' });

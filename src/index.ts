@@ -39,7 +39,7 @@ const start = async() => {
         openCvManager.showImage('logo', 'canvasOutput');
 
         openCvManager.loadImage(canvas);
-        openCvManager.delete('logo');
+        // openCvManager.delete('logo');
     };
     
     console.log('img elm', imgElement);
