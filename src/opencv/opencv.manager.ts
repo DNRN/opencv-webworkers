@@ -1,16 +1,14 @@
 import OpenCVWorker from '../web-workers/opencv.worker';
-import cv from '../assets/scripts/opencv.js';
+// import cv from '../assets/scripts/opencv.js';
 
 
 export const OpenCvManager = async () => {
-    cv.onRuntimeInitialized = async () => {
-        console.log('📦OpenCV runtime loaded');
-    };
+    // cv.onRuntimeInitialized = async () => {
+    //     console.log('📦OpenCV runtime loaded');
+    // };
 
-    const matMap = new Map();
-
+    // const matMap = new Map();
     const openCvWorker = new OpenCVWorker();
-
     const canvasOut = document.getElementById('canvasOut') as HTMLCanvasElement;
     
 
@@ -46,14 +44,14 @@ export const OpenCvManager = async () => {
     }
 
     return {
-        loadFromImageElm: (name: string, imgElement: HTMLImageElement) => {
-            const mat = cv.imread(imgElement);
-            matMap.set(name, mat);
-            return mat;
-        },
-        showImage: (name: string, canvas: string) => {
-            cv.imshow(canvas, matMap.get(name));
-        },
+        // loadFromImageElm: (name: string, imgElement: HTMLImageElement) => {
+        //     const mat = cv.imread(imgElement);
+        //     matMap.set(name, mat);
+        //     return mat;
+        // },
+        // showImage: (name: string, canvas: string) => {
+        //     cv.imshow(canvas, matMap.get(name));
+        // },
         loadImage: (canvas: HTMLCanvasElement) => {
             const imgData = readDataFromImage(canvas);
             openCvWorker.postMessage({ type: 'action', name: 'load', args: imgData }, [imgData.data.buffer]);
@@ -62,12 +60,12 @@ export const OpenCvManager = async () => {
             // openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
             // openCvWorker.postMessage({ type: 'grayscale' });
         },
-        grayscale: () => {
-            openCvWorker.postMessage({ type: 'grayscale' });
-        },
-        delete: (name) => {
-            matMap.get(name).delete();
-            matMap.delete(name);
-        }
+        // grayscale: () => {
+        //     openCvWorker.postMessage({ type: 'grayscale' });
+        // },
+        // delete: (name) => {
+        //     matMap.get(name).delete();
+        //     matMap.delete(name);
+        // }
     }
 }
