@@ -23,6 +23,7 @@ module.exports = {
     //     fs: 'empty'
     // },
     // devtool: 'source-map',
+    // target: 'node',
     devServer: {
         inline: true,
         compress: true
@@ -32,7 +33,6 @@ module.exports = {
             {test: /\.worker\.ts$/, loader: 'worker-loader'},
             {
                 test: /\.ts$/,
-                exclude: /[\/\\](server)[\/\\]/,
                 use: 'awesome-typescript-loader'
             },
             {
@@ -40,7 +40,7 @@ module.exports = {
                 use: { loader: 'worker-loader' }
             },
             {
-                test: /\.js$/,
+                test: /opencv.js$/,
                 use: ['script-loader']
             },
             {

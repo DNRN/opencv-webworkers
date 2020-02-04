@@ -1,14 +1,31 @@
 // import * as opencv from './assets/scripts/opencv';
 // const cv = require('./assets/scripts/opencv');
-// import MyWorker from './web-workers/hello.worker';
+import MyWorker from './web-workers/hello.worker';
 // import { ScriptLoader } from './scriptloader';
 import { OpenCvManager } from './opencv/opencv.manager';
+import OpenCVWorker from './web-workers/opencv.worker';
 
-// declare const cv: any;
+
+// const cv = require('./assets/scripts/opencv.js');
+
+// console.log('cv', cv);
+// console.log('imageSrc', document.getElementById('imageSrc'));
+
+// const openCvWorker = new OpenCVWorker();
+// openCvWorker.onmessage = ({data}) => {
+//     console.log('message from worker', data);
+// }
+
+const cv = require('./opencv.js');
+// let classifier = null;
+
+cv.onRuntimeInitialized = async () => {
+    console.log('📦OpenCV runtime loaded');
+};
 
 const start = async() => {
-    const openCvManager = await OpenCvManager();
-    console.log('OpenCV loaded')
+    // const openCvManager = await OpenCvManager();
+    // console.log('OpenCV loaded')
 
     const imgElement = document.getElementById('imageSrc') as HTMLImageElement;
     const inputElement = document.getElementById('fileInput');
@@ -18,11 +35,11 @@ const start = async() => {
     }, false);
     imgElement.onload = () => {
         // ocvMan.loadImage(canvas);
-        openCvManager.loadFromImageElm('logo', imgElement);
-        openCvManager.showImage('logo', 'canvasOutput');
+        // openCvManager.loadFromImageElm('logo', imgElement);
+        // openCvManager.showImage('logo', 'canvasOutput');
 
-        openCvManager.loadImage(canvas);
-        openCvManager.delete('logo');
+        // openCvManager.loadImage(canvas);
+        // openCvManager.delete('logo');
     };
     
     console.log('img elm', imgElement);

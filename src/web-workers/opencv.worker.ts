@@ -1,21 +1,40 @@
 // import { ScriptLoader } from "../scriptloader";
 // import cv from '../assets/scripts/opencv';
-import cv from '../assets/scripts/opencv.js';
+// import '../assets/scripts/opencv';
+import * as moment from 'moment';
 
-// declare const cv: any;
-// importScripts('https://docs.opencv.org/master/opencv.js');
-// const cv = require('../assets/scripts/opencv');
+console.log('m', moment);
 
+declare const cv: any;
+// importScripts('../assets/scripts/opencv.js');
+// const cv = require('../assets/scripts/opencv.js');
+// import cv from '../assets/scripts/opencv';
+// import * as cv from '../assets/scripts/opencv.js';
+
+// console.log('cv', cv);
+// importScripts('scripts/opencv.js');
+
+// require('../assets/scripts/opencv');
+
+// console.log('cv', cv);
 const ctx: Worker = self as any;
 // console.log('📦OpenCV runtime loaded from webworkers');
+
+// setTimeout(() => {
+//     init().then();
+// }, 10000);
 
 
 // ScriptLoader.load('opencv.js').then();
 // await ScriptLoader.load('opencv.js');
-cv.onRuntimeInitialized = async () => {
-    console.log('📦OpenCV runtime loaded from webworkers');
-    init().then();
-};
+// cv.onRuntimeInitialized = async () => {
+//     console.log('📦OpenCV runtime loaded from webworkers');
+//     init().then();
+// };
+
+ctx.postMessage({
+    message: 'Worker created' + moment.now(),
+});
 
 // importScripts('scripts/opencv.js');
 // console.log('CV', cv);
@@ -24,79 +43,79 @@ cv.onRuntimeInitialized = async () => {
 //     console.log('INITLL');
 // }
 
-// cv.onRuntimeInitialized = async () => {
-//     console.log('📦OpenCV runtime loaded');
-//     // init().then();
-// };
+cv.onRuntimeInitialized = () => {
+    console.log('📦OpenCV runtime loaded');
+    // init().then();
+};
 
 // interface
 
-const init = async() => {
+// const init = async() => {
 
-    let src;
-    let dimensions;
-
-
-    ctx.addEventListener('message', ({ data }) => {
-        console.log('data', data);
-        if (data.type === 'frame') {
-            // console.log('data', data);
-            // const mat = new cv.Mat(data.imgData.height, data.imgData.width, cv.CV_8UC4);
-            // mat.data.set(data.imgData.data);
-            // console.log('MAT', mat);
-            src = new cv.Mat(data.imgData.height, data.imgData.width, cv.CV_8UC4);
-            src.data.set(data.imgData.data);
-            dimensions = {
-                height: data.imgData.height,
-                width: data.imgData.width
-            }
-            ctx.postMessage({
-                message: 'Mat created'
-            });
-        }
-        if (data.type === 'grayscale') {
-            const dst = new cv.Mat();
-            cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-            console.log('gray scale', dst);
-
-            // const canvas = new OffscreenCanvas(dimensions.height, dimensions.width);
-            // const canvasCtx = canvas.getContext('2d');
-            // const imgData = canvasCtx.getImageData(0, 0, canvas.width, canvas.height);
-
-            // const imageDataRaw = new Uint8ClampedArray(dst.data, dimensions.height, dimensions.width);
-            const arr = new Uint8ClampedArray(40000);
-
-            // Iterate through every pixel
-            // for (let i = 0; i < arr.length; i += 4) {
-            //     arr[i + 0] = 0;    // R value
-            //     arr[i + 1] = 190;  // G value
-            //     arr[i + 2] = 0;    // B value
-            //     arr[i + 3] = 255;  // A value
-            // }
-
-            // var buffer = new ArrayBuffer();
-            // const a = new Uint8ClampedArray(262144);
-            const a = Uint8ClampedArray.from(dst.data);
-            const imageData = new ImageData(a, dst.cols, dst.rows);
-
-            // Initialize a new ImageData object
-            // const imageData = new ImageData(arr, 200);
+//     let src;
+//     let dimensions;
 
 
-            ctx.postMessage({ type: 'grayscale', imageData }, [imageData.data.buffer]);
-            // let imgData = new ImageData(new Uint8ClampedArray(dst.data, dst.cols, dst.rows);
-            // canvasCtx.putImageData(imgData, 0, 0);
-            // cv.imshow('canvasOutput', dst);
+//     ctx.addEventListener('message', ({ data }) => {
+//         console.log('data', data);
+//         if (data.type === 'frame') {
+//             // console.log('data', data);
+//             // const mat = new cv.Mat(data.imgData.height, data.imgData.width, cv.CV_8UC4);
+//             // mat.data.set(data.imgData.data);
+//             // console.log('MAT', mat);
+//             src = new cv.Mat(data.imgData.height, data.imgData.width, cv.CV_8UC4);
+//             src.data.set(data.imgData.data);
+//             dimensions = {
+//                 height: data.imgData.height,
+//                 width: data.imgData.width
+//             }
+//             ctx.postMessage({
+//                 message: 'Mat created'
+//             });
+//         }
+//         if (data.type === 'grayscale') {
+//             const dst = new cv.Mat();
+//             cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+//             console.log('gray scale', dst);
 
-            // let grayScale = cv.matFromImageData(imgData);
-        }
-    });
+//             // const canvas = new OffscreenCanvas(dimensions.height, dimensions.width);
+//             // const canvasCtx = canvas.getContext('2d');
+//             // const imgData = canvasCtx.getImageData(0, 0, canvas.width, canvas.height);
 
-    ctx.postMessage({
-        type: 'init',
-        message: 'OpenCV worker created'
-    });
-}
+//             // const imageDataRaw = new Uint8ClampedArray(dst.data, dimensions.height, dimensions.width);
+//             const arr = new Uint8ClampedArray(40000);
+
+//             // Iterate through every pixel
+//             // for (let i = 0; i < arr.length; i += 4) {
+//             //     arr[i + 0] = 0;    // R value
+//             //     arr[i + 1] = 190;  // G value
+//             //     arr[i + 2] = 0;    // B value
+//             //     arr[i + 3] = 255;  // A value
+//             // }
+
+//             // var buffer = new ArrayBuffer();
+//             // const a = new Uint8ClampedArray(262144);
+//             const a = Uint8ClampedArray.from(dst.data);
+//             const imageData = new ImageData(a, dst.cols, dst.rows);
+
+//             // Initialize a new ImageData object
+//             // const imageData = new ImageData(arr, 200);
+
+
+//             ctx.postMessage({ type: 'grayscale', imageData }, [imageData.data.buffer]);
+//             // let imgData = new ImageData(new Uint8ClampedArray(dst.data, dst.cols, dst.rows);
+//             // canvasCtx.putImageData(imgData, 0, 0);
+//             // cv.imshow('canvasOutput', dst);
+
+//             // let grayScale = cv.matFromImageData(imgData);
+//         }
+//     });
+
+//     ctx.postMessage({
+//         type: 'init',
+//         message: 'OpenCV worker created'
+//     });
+// }
 
 // init().then();
 

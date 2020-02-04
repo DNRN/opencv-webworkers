@@ -8,28 +8,30 @@
     <title>OpenCV web workers</title>
     <meta name="description" content="OpenCV web workers">
     <meta name="author" content="Dennis Christensen">
+
+    <!-- <script src="/scripts/opencv.js"></script> -->
 </head>
 
 <body>
+    <h1>OpenCV and workers</h1>
 
+    <h2>Hello OpenCV.js</h2>
+    <p id="status">OpenCV.js is loading...</p>
+    <div>
+        <div class="inputoutput">
+            <img id="imageSrc" alt="No Image" />
+            <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
+        </div>
+        <div class="inputoutput">
+            <canvas id="canvasOutput"></canvas>
+            <div class="caption">canvasOutput</div>
+        </div>
+        <div class="inputoutput">
+            <canvas id="canvasOut"></canvas>
+            <div class="caption">canvasOut</div>
+        </div>
+    </div>
 </body>
-<h1>OpenCV and workers</h1>
 
-<h2>Hello OpenCV.js</h2>
-<p id="status">OpenCV.js is loading...</p>
-<div>
-    <div class="inputoutput">
-        <img id="imageSrc" alt="No Image" />
-        <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
-    </div>
-    <div class="inputoutput">
-        <canvas id="canvasOutput"></canvas>
-        <div class="caption">canvasOutput</div>
-    </div>
-    <div class="inputoutput">
-        <canvas id="canvasOut"></canvas>
-        <div class="caption">canvasOut</div>
-    </div>
-</div>
 
 </html>

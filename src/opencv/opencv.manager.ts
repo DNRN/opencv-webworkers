@@ -7,7 +7,7 @@ declare const cv: any;
 
 
 export const OpenCvManager = async () => {
-    await ScriptLoader.load('opencv.js');
+    // await ScriptLoader.load('opencv.js');
     cv.onRuntimeInitialized = async () => {
         console.log('📦OpenCV runtime loaded');
     };
