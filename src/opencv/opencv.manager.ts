@@ -1,13 +1,8 @@
-import { ScriptLoader } from "../scriptloader";
 import OpenCVWorker from '../web-workers/opencv.worker';
-
-// import cv from '../assets/scripts/opencv.js';
-declare const cv: any;
-// import cv from '../assets/scripts/opencv';
+import cv from '../assets/scripts/opencv.js';
 
 
 export const OpenCvManager = async () => {
-    // await ScriptLoader.load('opencv.js');
     cv.onRuntimeInitialized = async () => {
         console.log('📦OpenCV runtime loaded');
     };
@@ -27,7 +22,7 @@ export const OpenCvManager = async () => {
         }
         if (message.data.type === 'grayscale') {
             const ctx = canvasOut.getContext('2d');
-            console.log('grayscale', message.data);
+            console.log('grayscale out', message.data);
             const imageData = new ImageData(message.data.imageData.data, message.data.imageData.height, message.data.imageData.width);
             ctx.putImageData(imageData, 0, 0);
         }

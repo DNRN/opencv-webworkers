@@ -1,9 +1,9 @@
-// import * as opencv from './assets/scripts/opencv';
+// import cv from './assets/scripts/opencv.js';
 // const cv = require('./assets/scripts/opencv');
-import MyWorker from './web-workers/hello.worker';
+// import MyWorker from './web-workers/hello.worker';
 // import { ScriptLoader } from './scriptloader';
 import { OpenCvManager } from './opencv/opencv.manager';
-import OpenCVWorker from './web-workers/opencv.worker';
+// import OpenCVWorker from './web-workers/opencv.worker';
 
 
 // const cv = require('./assets/scripts/opencv.js');
@@ -12,19 +12,20 @@ import OpenCVWorker from './web-workers/opencv.worker';
 // console.log('imageSrc', document.getElementById('imageSrc'));
 
 // const openCvWorker = new OpenCVWorker();
-// openCvWorker.onmessage = ({data}) => {
+// openCvWorker.onmessage = ({ data }) => {
 //     console.log('message from worker', data);
 // }
 
-const cv = require('./opencv.js');
+// const cv = require('./opencv.js');
 // let classifier = null;
-
-cv.onRuntimeInitialized = async () => {
-    console.log('📦OpenCV runtime loaded');
-};
+// require('./assets/scripts/opencv.js');
+// declare const cv: any;
+// cv.onRuntimeInitialized = async () => {
+//     console.log('📦OpenCV runtime loaded');
+// };
 
 const start = async() => {
-    // const openCvManager = await OpenCvManager();
+    const openCvManager = await OpenCvManager();
     // console.log('OpenCV loaded')
 
     const imgElement = document.getElementById('imageSrc') as HTMLImageElement;
@@ -34,12 +35,11 @@ const start = async() => {
         imgElement.src = URL.createObjectURL(e.target.files[0]);
     }, false);
     imgElement.onload = () => {
-        // ocvMan.loadImage(canvas);
-        // openCvManager.loadFromImageElm('logo', imgElement);
-        // openCvManager.showImage('logo', 'canvasOutput');
+        openCvManager.loadFromImageElm('logo', imgElement);
+        openCvManager.showImage('logo', 'canvasOutput');
 
-        // openCvManager.loadImage(canvas);
-        // openCvManager.delete('logo');
+        openCvManager.loadImage(canvas);
+        openCvManager.delete('logo');
     };
     
     console.log('img elm', imgElement);
