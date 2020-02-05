@@ -19,6 +19,7 @@ const ProgressBarPluginConfig = new ProgressBarPlugin()
 /* Export configuration */
 module.exports = {
     mode: 'development',
+    target: 'node',
     // node: {
     //     fs: 'empty'
     // },
@@ -28,6 +29,7 @@ module.exports = {
         inline: true,
         compress: true
     },
+    externals: ['fs'],
     module: {
         rules: [
             {test: /\.worker\.ts$/, loader: 'worker-loader'},
@@ -40,7 +42,7 @@ module.exports = {
                 use: { loader: 'worker-loader' }
             },
             {
-                test: /opencv.js$/,
+                test: /\.opencv.js$/,
                 use: ['script-loader']
             },
             {

@@ -1,37 +1,42 @@
-import { ScriptLoader } from "../scriptloader";
 import OpenCVWorker from '../web-workers/opencv.worker';
-
 // import cv from '../assets/scripts/opencv.js';
-declare const cv: any;
-// import cv from '../assets/scripts/opencv';
 
 
 export const OpenCvManager = async () => {
-    // await ScriptLoader.load('opencv.js');
-    cv.onRuntimeInitialized = async () => {
-        console.log('📦OpenCV runtime loaded');
-    };
+    // cv.onRuntimeInitialized = async () => {
+    //     console.log('📦OpenCV runtime loaded');
+    // };
 
-    const matMap = new Map();
-
+    // const matMap = new Map();
     const openCvWorker = new OpenCVWorker();
-
     const canvasOut = document.getElementById('canvasOut') as HTMLCanvasElement;
+    
 
-
-    openCvWorker.onmessage = (message) => {
-        console.log('message from worker', message);
-        if (message.data.type === 'init') {
+    const actions = new Map<string, ((...args) => void)> ([
+        ['init', () => {
             document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
-            console.log(message.data.message)
-        }
-        if (message.data.type === 'grayscale') {
+        }],
+        ['msg', (msg: string) => {
+            console.log(msg);
+        }],
+        ['imageData', (imgData) => {
             const ctx = canvasOut.getContext('2d');
-            console.log('grayscale', message.data);
-            const imageData = new ImageData(message.data.imageData.data, message.data.imageData.height, message.data.imageData.width);
+            // WTF? OpenCV vender om på width and height
+            canvasOut.width = imgData.height;
+            canvasOut.height = imgData.width;
+            console.log('load image data from openCV worker', imgData);
+            const imageData = new ImageData(imgData.data, imgData.height, imgData.width);
             ctx.putImageData(imageData, 0, 0);
-        }
+        }]
+    ]);
+
+    const handleAction = message => {
+        console.log('msg', message);
+        const action = actions.get(message.data.type);
+
+        action ? action(message.data.args) : console.error('Action not found', message);
     }
+    openCvWorker.onmessage = handleAction;
 
     const readDataFromImage = (canvas: HTMLCanvasElement) => {
         const imgData = canvas.getContext('2d');
@@ -39,25 +44,28 @@ export const OpenCvManager = async () => {
     }
 
     return {
-        loadFromImageElm: (name: string, imgElement: HTMLImageElement) => {
-            const mat = cv.imread(imgElement);
-            matMap.set(name, mat);
-            return mat;
-        },
-        showImage: (name: string, canvas: string) => {
-            cv.imshow(canvas, matMap.get(name));
-        },
+        // loadFromImageElm: (name: string, imgElement: HTMLImageElement) => {
+        //     const mat = cv.imread(imgElement);
+        //     matMap.set(name, mat);
+        //     return mat;
+        // },
+        // showImage: (name: string, canvas: string) => {
+        //     cv.imshow(canvas, matMap.get(name));
+        // },
         loadImage: (canvas: HTMLCanvasElement) => {
             const imgData = readDataFromImage(canvas);
-            openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
-            openCvWorker.postMessage({ type: 'grayscale' });
+            openCvWorker.postMessage({ type: 'action', name: 'load', args: imgData }, [imgData.data.buffer]);
+            openCvWorker.postMessage({ type: 'action', name: 'blur' });
+            openCvWorker.postMessage({ type: 'action', name: 'get' });
+            // openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
+            // openCvWorker.postMessage({ type: 'grayscale' });
         },
-        grayscale: () => {
-            openCvWorker.postMessage({ type: 'grayscale' });
-        },
-        delete: (name) => {
-            matMap.get(name).delete();
-            matMap.delete(name);
-        }
+        // grayscale: () => {
+        //     openCvWorker.postMessage({ type: 'grayscale' });
+        // },
+        // delete: (name) => {
+        //     matMap.get(name).delete();
+        //     matMap.delete(name);
+        // }
     }
 }
