@@ -16,9 +16,7 @@ import OpenCVWorker from './web-workers/opencv.worker';
 //     console.log('message from worker', data);
 // }
 
-const cv = require('./opencv.js');
-// let classifier = null;
-
+const cv = require('./assets/scripts/opencv.js');
 cv.onRuntimeInitialized = async () => {
     console.log('📦OpenCV runtime loaded');
 };
