@@ -21,12 +21,6 @@ const init = async() => {
         ['load', (imageData: ImageData) => {
             const src = new cv.Mat(imageData.height, imageData.width, cv.CV_8UC4);
             src.data.set(imageData.data);
-            // let ksize = new cv.Size(10,10);
-            // let anchor = new cv.Point(-1,-1);
-            // // put your code here
-            // cv.blur(src, src, ksize, anchor, cv.BORDER_DEFAULT);
-
-            
             _src = src;
             ctx.postMessage({
                 type: 'msg',
@@ -39,7 +33,14 @@ const init = async() => {
             cv.blur(_src, _src, ksize, anchor, cv.BORDER_DEFAULT);
             ctx.postMessage({
                 type: 'msg',
-                args: 'Mat created'
+                args: 'Imaged blurred'
+            });
+        }],
+        ['orb', () => {
+            // Do ORB magic here
+            ctx.postMessage({
+                type: 'msg',
+                args: 'ORB done'
             });
         }],
         ['get', () => {

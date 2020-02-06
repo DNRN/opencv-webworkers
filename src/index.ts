@@ -1,24 +1,4 @@
 import { OpenCvManager } from './opencv/opencv.manager';
-<<<<<<< HEAD
-import OpenCVWorker from './web-workers/opencv.worker';
-
-
-// const cv = require('./assets/scripts/opencv.js');
-
-// console.log('cv', cv);
-// console.log('imageSrc', document.getElementById('imageSrc'));
-
-// const openCvWorker = new OpenCVWorker();
-// openCvWorker.onmessage = ({data}) => {
-//     console.log('message from worker', data);
-// }
-
-const cv = require('./assets/scripts/opencv.js');
-cv.onRuntimeInitialized = async () => {
-    console.log('📦OpenCV runtime loaded');
-};
-=======
->>>>>>> fb16ddf1c6192f0bc7ef36cf8de2c4bf564b20d9
 
 const start = async() => {
     const openCvManager = await OpenCvManager();
@@ -38,7 +18,6 @@ const start = async() => {
         context.drawImage(imgElement, 0, 0);
 
         openCvManager.loadImage(imageCanvas);
-        // openCvManager.delete('logo');
     };
     
     console.log('img elm', imgElement);

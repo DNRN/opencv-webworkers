@@ -44,28 +44,12 @@ export const OpenCvManager = async () => {
     }
 
     return {
-        // loadFromImageElm: (name: string, imgElement: HTMLImageElement) => {
-        //     const mat = cv.imread(imgElement);
-        //     matMap.set(name, mat);
-        //     return mat;
-        // },
-        // showImage: (name: string, canvas: string) => {
-        //     cv.imshow(canvas, matMap.get(name));
-        // },
         loadImage: (canvas: HTMLCanvasElement) => {
             const imgData = readDataFromImage(canvas);
             openCvWorker.postMessage({ type: 'action', name: 'load', args: imgData }, [imgData.data.buffer]);
             openCvWorker.postMessage({ type: 'action', name: 'blur' });
+            openCvWorker.postMessage({ type: 'action', name: 'orb' });
             openCvWorker.postMessage({ type: 'action', name: 'get' });
-            // openCvWorker.postMessage({ type: 'frame', imgData }, [imgData.data.buffer]);
-            // openCvWorker.postMessage({ type: 'grayscale' });
-        },
-        // grayscale: () => {
-        //     openCvWorker.postMessage({ type: 'grayscale' });
-        // },
-        // delete: (name) => {
-        //     matMap.get(name).delete();
-        //     matMap.delete(name);
-        // }
+        }
     }
 }
